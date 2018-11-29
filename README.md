@@ -15,9 +15,9 @@ If you want to run tests, just do yourself a favor and don't install the ancient
 Role Variables
 --------------
 
-wsgi_user: a user/group created to run wsgi
-wiki_admin_username: a MoinMoin superuser
-wiki_admin_password: the MoinMoin superuser password
+* wsgi_user: a user/group created to run wsgi
+* wiki_admin_username: a MoinMoin superuser
+* wiki_admin_password: the MoinMoin superuser password
 
 A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
 
@@ -29,16 +29,14 @@ A list of other roles hosted on Galaxy should go here, plus any details in regar
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
+    - hosts: wikihosts
       roles:
-         - { role: username.rolename, x: 42 }
+         - ansible-moinmoin-wsgi
 
 License
 -------
 
-BSD
+???
 
 Author Information
 ------------------
