@@ -11,7 +11,7 @@
 
 - name: download MoinMoin
   get_url:
-    url: "{{ moinmoin_src }}"
+    url: "{{ moinmoin_src_url }}"
     dest: /tmp
     mode: 0440
 
@@ -20,4 +20,9 @@
     src: "/tmp/{{ moinmoin_src }}"
     dest: "/tmp"
 
-      
+
+- name: enable, start Apache
+  systemd:
+    name: httpd
+    enabled: yes
+    state: started

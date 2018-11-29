@@ -8,7 +8,9 @@ A role to install MoinMoin wiki software, running under Apache and mod_wsgi.
 Requirements
 ------------
 
-CentOS (or likely RHEL or Fedora, a target host where the yum module works).
+CentOS (or likely RHEL or Fedora, a target host where the yum and systemd modules work).
+
+If you want to run tests, just do yourself a favor and don't install the ancient version of Ruby that CentOS provides or you will create a nightmare.
 
 Role Variables
 --------------
