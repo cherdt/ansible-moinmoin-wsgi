@@ -1,0 +1,23 @@
+---
+# tasks file for ansible-moinmoin-wsgi
+
+- name: install apache, mod_wsgi
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - httpd
+    - mod_wsgi
+
+- name: download MoinMoin
+  get_url:
+    url: "{{ moinmoin_src }}"
+    dest: /tmp
+    mode: 0440
+
+- name: extract MoinMoin
+  unarchive:
+    src: "/tmp/{{ moinmoin_src }}"
+    dest: "/tmp"
+
+      

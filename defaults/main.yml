@@ -1,0 +1,10 @@
+---
+# defaults file for ansible-moinmoin-wsgi
+
+wsgi_user: moinmoin
+
+moinmoin_src: http://static.moinmo.in/files/moin-1.9.10.tar.gz
+
+wiki_admin_username: admin
+wiki_admin_password: admin
+
