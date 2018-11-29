@@ -3,7 +3,8 @@
 
 wsgi_user: moinmoin
 
-moinmoin_src: moin-1.9.10.tar.gz
+moinmoin_version: moin-1.9.10
+moinmoin_src: "{{ moinmoin_version }}.tar.gz"
 moinmoin_src_url: "http://static.moinmo.in/files/{{ moinmoin_src }}"
 
 wiki_admin_username: admin

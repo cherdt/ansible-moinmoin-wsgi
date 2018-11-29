@@ -1,9 +1,9 @@
 Role Name
 =========
 
-This is a work in progress.
+This is a work in progress. It does a lot of less-than-ideal things.
 
-A role to install MoinMoin wiki software, running under Apache and mod_wsgi.
+A role to install [MoinMoin](http://moinmo.in/) wiki software, running under Apache and mod_wsgi.
 
 Requirements
 ------------

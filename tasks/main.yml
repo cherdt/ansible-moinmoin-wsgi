@@ -9,17 +9,72 @@
     - httpd
     - mod_wsgi
 
-- name: download MoinMoin
-  get_url:
-    url: "{{ moinmoin_src_url }}"
-    dest: /tmp
-    mode: 0440
+#- name: download MoinMoin
+#  get_url:
+#    url: "{{ moinmoin_src_url }}"
+#    dest: /tmp
+#    mode: 0440
 
 - name: extract MoinMoin
   unarchive:
     src: "/tmp/{{ moinmoin_src }}"
     dest: "/tmp"
 
+- name: run moinmoin setup script
+  shell: "cd /tmp/{{ moinmoin_version }} && /usr/bin/python setup.py install"
+
+- name: change ownership of moinmoin files
+  file:
+    path: "{{ item }}"
+    recurse: yes
+    owner: apache
+    group: apache
+  with_items:
+    - /usr/share/moin/data
+    - /usr/share/moin/underlay
+
+- name: copy wiki config
+  copy:
+    src: wikiconfig.py
+    dest: /usr/share/moin/wikiconfig.py
+    owner: "apache"
+    group: "apache"
+    mode: 0644
+
+- name: update WSGI path
+  lineinfile:
+    path: /usr/share/moin/server/moin.wsgi
+    regexp: "#sys.path.insert(0, '/path/to/wikiconfigdir')"
+    line: "sys.path.insert(0, '/usr/share/moin')"
+
+- name: copy Apache conf script
+  copy:
+    src: moinmoin.conf
+    dest: /etc/httpd/conf.d/moinmoin.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: create an admin user
+  shell: /usr/bin/moin --config-dir=/usr/share/moin account create --name=admin --password=admin --email=admin@localhost
+
+- name: remove Apache default welcome page
+  file:
+    path: /etc/httpd/conf.d/welcome.conf
+    state: absent 
+
+# Note: never do this
+- name: stop firewalld
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: no
+
+# Note: never do this
+- name: change SELinux to permissive mode
+  selinux:
+    policy: targeted
+    state: permissive
 
 - name: enable, start Apache
   systemd:
