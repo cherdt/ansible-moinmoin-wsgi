@@ -37,12 +37,12 @@
     owner: apache
     group: apache
   with_items:
-    - /usr/share/moin/data
-    - /usr/share/moin/underlay
+    - "{{ moinmoin_default_path }}/data"
+    - "{{ moinmoin_default_path }}/underlay"
 
 - name: create moin directories
   file:
-    path: "/var/www/moin/{{ item }}"
+    path: "{{ moinmoin_install_path }}/{{ item }}"
     state: directory
     owner: apache
     group: apache
@@ -53,7 +53,7 @@
 
 - name: change SELinux file context to allow Apache to write data
   sefcontext:
-    target: "/var/www/moin/{{ item }}(/.*)?"
+    target: "{{ moinmoin_install_path }}/{{ item }}(/.*)?"
     setype: httpd_sys_rw_content_t
     state: present
   with_items:
@@ -61,29 +61,29 @@
     - underlay
 
 - name: run restorecon to apply the previous SELinux file context
-  shell: "restorecon -R /var/www/moin/{{ item }}"
+  shell: "restorecon -R {{ moinmoin_install_path }}/{{ item }}"
   with_items:
     - data
     - underlay
 
 - name: copy essential wiki files
-  shell: "cp -R /usr/share/moin/data/* /var/www/moin/data/ && chown -R apache:apache /var/www/moin/data"
-
-- name: copy essential wiki files
-  shell: "cp -R /usr/share/moin/underlay/* /var/www/moin/underlay/ && chown -R apache:apache /var/www/moin/underlay"
+  shell: "cp -R {{ moinmoin_default_path }}/{{ item }}/* {{ moinmoin_install_path }}/{{ item }}/ && chown -R apache:apache {{ moinmoin_install_path }}/{{ item }}"
+  with_items:
+    - data
+    - underlay
 
 - name: copy wiki config
   copy:
     src: wikiconfig.py
-    dest: /var/www/moin/wikiconfig.py
+    dest: "{{ moinmoin_install_path }}/wikiconfig.py"
     owner: "apache"
     group: "apache"
     mode: 0644
 
 - name: copy wiki wsgi
   copy:
-    src: /usr/share/moin/server/moin.wsgi
-    dest: /var/www/moin/moin.wsgi
+    src: "{{ moinmoin_default_path }}/server/moin.wsgi"
+    dest: "{{ moinmoin_install_path }}/moin.wsgi"
     remote_src: yes
     owner: "apache"
     group: "apache"
@@ -91,7 +91,7 @@
 
 - name: update WSGI path
   lineinfile:
-    path: /var/www/moin/moin.wsgi
+    path: "{{ moinmoin_install_path }}/moin.wsgi"
     regexp: "#sys.path.insert(0, '/path/to/wikiconfigdir')"
     line: "sys.path.insert(0, '/var/www/moin')"
 
@@ -104,7 +104,7 @@
     mode: 0644
 
 - name: create an admin user
-  shell: /usr/bin/moin --config-dir=/usr/share/moin account create --name=admin --password=admin --email=admin@localhost
+  shell: "/usr/bin/moin --config-dir={{ moinmoin_install_path }} account create --name={{ wiki_admin_username }} --password={{ wiki_admin_password }} --email={{ wiki_admin_email }}"
 
 - name: remove Apache default welcome page
   file:

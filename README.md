@@ -10,14 +10,13 @@ Requirements
 
 CentOS (or likely RHEL or Fedora, a target host where the firewalld, systemd, and yum modules work).
 
-If you want to run tests, just do yourself a favor and don't install the ancient version of Ruby that CentOS provides or you will create a nightmare.
-
 Role Variables
 --------------
 
 * wsgi_user: a user/group created to run wsgi
 * wiki_admin_username: a MoinMoin superuser
 * wiki_admin_password: the MoinMoin superuser password
+* wiki_admin_email: the email address of the MoinMoin superuser
 
 A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
 
@@ -32,6 +31,8 @@ Example Playbook
     - hosts: wikihosts
       roles:
          - ansible-moinmoin-wsgi
+
+After running the playbook, visit http://mywiki.example.com/LanguageSetup?action=language_setup to install help pages for the language of your choice.
 
 License
 -------
