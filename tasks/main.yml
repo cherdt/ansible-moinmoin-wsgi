@@ -63,12 +63,15 @@
     path: /etc/httpd/conf.d/welcome.conf
     state: absent 
 
-# Note: never do this
-- name: stop firewalld
-  systemd:
-    name: firewalld
-    state: stopped
-    enabled: no
+- name: allow ports 80, 443 via firewalld
+  firewalld:
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+    immediate: yes
+  with_items:
+    - http
+    - https
 
 # Note: never do this
 - name: change SELinux to permissive mode
