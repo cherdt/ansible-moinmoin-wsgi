@@ -33,19 +33,60 @@
     - /usr/share/moin/data
     - /usr/share/moin/underlay
 
+- name: create moin directories
+  file:
+    path: "/var/www/moin/{{ item }}"
+    state: directory
+    owner: apache
+    group: apache
+    mode: 0755
+  with_items:
+    - data
+    - underlay
+
+- name: change SELinux file context to allow Apache to write data
+  sefcontext:
+    target: "/var/www/moin/{{ item }}(/.*)?"
+    setype: httpd_sys_rw_content_t
+    state: present
+  with_items:
+    - data
+    - underlay
+
+- name: run restorecon to apply the previous SELinux file context
+  shell: "restorecon -R /var/www/moin/{{ item }}"
+  with_items:
+    - data
+    - underlay
+
+- name: copy essential wiki files
+  shell: "cp -R /usr/share/moin/data/* /var/www/moin/data/ && chown -R apache:apache /var/www/moin/data"
+
+- name: copy essential wiki files
+  shell: "cp -R /usr/share/moin/underlay/* /var/www/moin/underlay/ && chown -R apache:apache /var/www/moin/underlay"
+
 - name: copy wiki config
   copy:
     src: wikiconfig.py
-    dest: /usr/share/moin/wikiconfig.py
+    dest: /var/www/moin/wikiconfig.py
     owner: "apache"
     group: "apache"
     mode: 0644
 
+- name: copy wiki wsgi
+  copy:
+    src: /usr/share/moin/server/moin.wsgi
+    dest: /var/www/moin/moin.wsgi
+    remote_src: yes
+    owner: "apache"
+    group: "apache"
+    mode: 0664
+
 - name: update WSGI path
   lineinfile:
-    path: /usr/share/moin/server/moin.wsgi
+    path: /var/www/moin/moin.wsgi
     regexp: "#sys.path.insert(0, '/path/to/wikiconfigdir')"
-    line: "sys.path.insert(0, '/usr/share/moin')"
+    line: "sys.path.insert(0, '/var/www/moin')"
 
 - name: copy Apache conf script
   copy:
@@ -72,12 +113,6 @@
   with_items:
     - http
     - https
-
-# Note: never do this
-- name: change SELinux to permissive mode
-  selinux:
-    policy: targeted
-    state: permissive
 
 - name: enable, start Apache
   systemd:
