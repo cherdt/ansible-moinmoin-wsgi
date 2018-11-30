@@ -8,7 +8,7 @@ A role to install [MoinMoin](http://moinmo.in/) wiki software, running under Apa
 Requirements
 ------------
 
-CentOS (or likely RHEL or Fedora, a target host where the yum and systemd modules work).
+CentOS (or likely RHEL or Fedora, a target host where the firewalld, systemd, and yum modules work).
 
 If you want to run tests, just do yourself a favor and don't install the ancient version of Ruby that CentOS provides or you will create a nightmare.
 

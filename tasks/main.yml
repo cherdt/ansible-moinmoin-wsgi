@@ -9,11 +9,18 @@
     - httpd
     - mod_wsgi
 
-#- name: download MoinMoin
-#  get_url:
-#    url: "{{ moinmoin_src_url }}"
-#    dest: /tmp
-#    mode: 0440
+- name: check for MoinMoin download
+  stat:
+    path: "/tmp/{{ moinmoin_src }}"
+  register: moinsource
+
+- name: download MoinMoin
+  get_url:
+    url: "{{ moinmoin_src_url }}"
+    checksum: "{{ moinmoin_src_sha256 }}"
+    dest: /tmp
+    mode: 0440
+  when: not moinsource.stat.exists or not moinsource.stat.isreg
 
 - name: extract MoinMoin
   unarchive:
