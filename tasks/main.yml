@@ -1,10 +1,13 @@
 ---
 # tasks file for ansible-moinmoin-wsgi
 
-- name: install libselinux-python, needed to manage SELinux contexts
+- name: install SELinux packages 
   yum:
-    name: libselinux-python
+    name: "{{ item }}"
     state: latest
+  with_items:
+    - libselinux-python
+    - policycoreutils-python
 
 - name: install apache, mod_wsgi
   yum:
