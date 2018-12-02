@@ -1,0 +1,16 @@
+---
+
+- name: install SELinux packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - libselinux-python
+    - policycoreutils-python
+
+- name: set SELinux to enforce policy
+  selinux:
+    policy: targeted
+    state: enforcing
+
+...
