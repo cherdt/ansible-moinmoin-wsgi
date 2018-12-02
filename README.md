@@ -37,7 +37,7 @@ After running the playbook, visit http://mywiki.example.com/LanguageSetup?action
 License
 -------
 
-???
+BSD (note that the license for MoinMoin is GPLv2)
 
 Author Information
 ------------------
