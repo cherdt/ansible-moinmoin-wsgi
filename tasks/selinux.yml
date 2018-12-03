@@ -14,4 +14,7 @@
     policy: targeted
     state: enforcing
 
+- name: enforce SELinux policy RIGHT NOW
+  cmd: /usr/sbin/setenforce 1
+ 
 ...
