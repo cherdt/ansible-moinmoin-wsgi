@@ -7,6 +7,7 @@
   with_items:
     - selinux-policy
     - libselinux-python
+    - libselinux-utils
     - policycoreutils-python
 
 - name: set SELinux to enforce policy
@@ -15,6 +16,6 @@
     state: enforcing
 
 - name: enforce SELinux policy RIGHT NOW
-  cmd: /usr/sbin/setenforce 1
+  command: /usr/sbin/setenforce 1
  
 ...
